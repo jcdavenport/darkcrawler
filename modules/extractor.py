@@ -4,7 +4,7 @@ import os
 # import sys
 # import urllib2
 from urllib.request import urlopen
-from modules.scrape_obj import scraper
+# from modules.scrape_obj import scraper
 # Input links from file and extract them into path/files
 
 
@@ -59,8 +59,6 @@ def intermex(inputfile):
 def outex(website, outputfile, outpath):
     # Extract page to file
     try:
-        scraper()
-
         outputfile = outpath + "/" + outputfile
         f = open(outputfile, 'w')
         f.write(urlopen(website).read().decode('utf-8'))

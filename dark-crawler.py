@@ -144,7 +144,7 @@ def main():
         checkIP()
         print('## URL: ' + args.url)
 
-    # Canon/ion of website and create path for output 
+    # Canonicalization of website and create path for output
     if len(args.url) > 0:
         website = urlcanon(args.url, args.verbose)
         if args.folder is not None:

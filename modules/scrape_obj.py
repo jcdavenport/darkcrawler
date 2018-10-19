@@ -22,16 +22,16 @@ from bs4 import BeautifulSoup
 # noinspection PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable
 def scraper():
     # parsing html from message board link location
-    page = requests.get('http://oxwugzccvk3dk6tj.onion/tech/index.html')  # don't use hard-coded url
+    page = requests.get('http://oxwugzccvk3dk6tj.onion/tech/index.html')  # hard-coded url for testing only
     soup = BeautifulSoup(page.text, 'html.parser')
 
     # get the title of the message board
     board_title = soup.find('header').find('h1')
 
     # Create a file to write to, add headers row
-    f = csv.writer(open('test_data.csv', 'w'))
+    # f = csv.writer(open('test_data.csv', 'w'))
     # f.writerow([board_title])
-    f.writerow(['Thread Data' + board_title])
+    # f.writerow(['Thread Data' + board_title])
 
     # find the body of the message forum
     forum_body = soup.find('body', attrs={'class': '8chan is-not-moderator active-index'}).find('form', attrs={
@@ -53,18 +53,18 @@ def scraper():
         if row:
             res.append(row)
 
-    field_names = ["Name", "Time", "Number", "Text"]
+    field_names = ["Thread", "Name", "Time", "Number", "Text"]
     with open("~/Desktop/testout.csv", "w") as f:
         writer = csv.DictWriter(f, field_names)
 
         comment_block = [
             {
+                "Thread": board_title,
                 "Name": comment_name,
                 "Time": comment_time,
                 "Number": comment_number,
                 "Text": thread_body
             },
-            ...
         ]
 
         # Write a header row

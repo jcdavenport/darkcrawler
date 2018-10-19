@@ -9,7 +9,7 @@ from urllib.request import urlopen
 from json import load
 
 
-# Canonization of URL
+# Canonicalization of URL
 def urlcanon(website, verbose):
     if not website.startswith("http"):
         if not website.startswith("www."):

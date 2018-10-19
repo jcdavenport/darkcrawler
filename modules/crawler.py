@@ -11,6 +11,8 @@ import urllib.error
 from bs4 import BeautifulSoup
 import pandas as pd  # added
 
+from modules.scrape_obj import scraper
+
 
 # Exclude links that we dont need
 def excludes(link, website, outpath):
@@ -43,7 +45,7 @@ def excludes(link, website, outpath):
         return True
 
 
-# Canonization of the link
+# Canonicalization of the link
 def canonical(link, website):
     # Already formatted
     if link.startswith(website):
@@ -69,6 +71,10 @@ def canonical(link, website):
 # Core of crawler
 # noinspection PyUnboundLocalVariable
 def crawler(website, cdepth, cpause, outpath, logs, verbose):
+
+    # [TEST THE SCRAPER!]
+    scraper()
+
     lst = set()
     ordlst = []
     ordlst.insert(0, website)
