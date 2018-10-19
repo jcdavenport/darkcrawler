@@ -19,6 +19,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
+# noinspection PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable
 def scraper():
     # parsing html from message board link location
     page = requests.get('http://oxwugzccvk3dk6tj.onion/tech/index.html')  # don't use hard-coded url

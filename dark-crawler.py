@@ -68,6 +68,7 @@ def connect_tor():
         print("Error: %s" % e + "\n## Can't establish connection with TOR")
 
 
+# noinspection PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnusedLocal
 def main():
     # Initialize necessary variables
     input_file = output_file = ''

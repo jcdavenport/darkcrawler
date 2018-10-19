@@ -4,8 +4,8 @@ import sys
 import re
 import subprocess
 import os
-from urllib.request import Request, urlopen
-from urllib.error import URLError
+from urllib.request import urlopen
+# from urllib.error import URLError
 from json import load
 
 
@@ -23,6 +23,7 @@ def urlcanon(website, verbose):
 
 
 # Create output path
+# noinspection PyUnusedLocal
 def folder(website, verbose):
     if website.startswith('http'):
         outpath = website.replace("http://", "")
@@ -40,6 +41,7 @@ def folder(website, verbose):
 
 
 # Check if TOR service is running
+# noinspection PyShadowingNames
 def check_tor(verbose):
     check_tor = subprocess.check_output(['ps', '-e'])
 
@@ -56,6 +58,7 @@ def check_tor(verbose):
 
 
 # Check your IP from external website
+# noinspection PyPep8Naming,PyUnboundLocalVariable
 def checkIP():
     try:
         web_ip_check = 'https://api.ipify.org/?format=json'
