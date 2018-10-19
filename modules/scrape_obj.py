@@ -29,44 +29,64 @@ def scraper():
     board_title = soup.find('header').find('h1')
 
     # Create a file to write to, add headers row
-    # f = csv.writer(open('test_data.csv', 'w'))
+    f = csv.writer(open('test_data.csv', 'w'))
     # f.writerow([board_title])
-    # f.writerow(['Thread Data' + board_title])
+    f.writerow(['Thread', 'Name', 'Time', 'Number', 'Comment'])
 
     # find the body of the message forum
     # forum_body = soup.find('body', class_='8chan is-not-moderator active-index').find('form', name_='postcontrols')
 
-    # the important data is within the thread class
-    message_board = soup.find_all('div', class_='thread')
+    # containers for the post thread
+    comment_board = soup.find_all('div', class_='thread')
 
-    res = []
+    post_block = comment_board.find('div', class_='post reply body-not-empty')
+
+    # Lists to store the scraped data in
+    # res = []  # not needed
+    names = []
+    times = []
+    numbers = []
+    comments = []
 
     # extract the contents of each thread
-    for thread in message_board:
-        thread_data = thread.find_all('p', class_='intro')
-        comment_name = thread_data.find('span', class_='name').text.strip()
-        comment_time = thread_data.find('time').text.strip()
-        comment_number = thread_data.find('a', class_='post_no').text.strip()
-        thread_body = thread.find('div', class_='body').contents[0]
-        row = [thread]
-        if row:
-            res.append(row)
+    for post in post_block:
+
+        comment_name = post.p.label.span.text
+        names.append(comment_name)
+
+        comment_time = post.p.label.time.text
+        times.append(comment_time)
+
+        comment_number = post.p.find('a', class_='post_no').text
+        numbers.append(comment_number)
+
+        comment_text = post.find('div', class_='body').p.text  # .contents[0]
+        comments.append(comment_text)
+
+        # for lines in thread_body:
+        #     comment_text = lines.p.text
+
+        # row = [thread]
+        #
+        # if row:
+        #     res.append(row)
 
     field_names = ["Thread", "Name", "Time", "Number", "Text"]
     with open("~/Desktop/testout.csv", "w") as f:
         writer = csv.DictWriter(f, field_names)
 
+        # used for writing data in csv.Dict format (not regular csv)
         comment_block = [
             {
                 "Thread": board_title,
                 "Name": comment_name,
                 "Time": comment_time,
                 "Number": comment_number,
-                "Text": thread_body
+                "Text": comment_text
             },
         ]
 
-        # Write a header row
+        # Write a header row (dict format)
         writer.writerow({x: x for x in field_names})
 
         for item_property_dict in comment_block:
