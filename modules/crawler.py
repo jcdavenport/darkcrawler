@@ -9,7 +9,7 @@ import urllib.error
 # import time
 # from BeautifulSoup import BeautifulSoup
 from bs4 import BeautifulSoup
-import pandas as pd  # added
+# import pandas as pd  # added
 
 from modules.scrape_obj import scraper
 

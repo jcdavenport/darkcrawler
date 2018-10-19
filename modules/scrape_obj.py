@@ -34,21 +34,20 @@ def scraper():
     # f.writerow(['Thread Data' + board_title])
 
     # find the body of the message forum
-    forum_body = soup.find('body', attrs={'class': '8chan is-not-moderator active-index'}).find('form', attrs={
-        'name': 'postcontrols'})  # .find('form', name='postcontrols')  #('class="8chan is-not-moderator active-index')
+    # forum_body = soup.find('body', class_='8chan is-not-moderator active-index').find('form', name_='postcontrols')
 
     # the important data is within the thread class
-    message_board = forum_body.find_all('div', attrs={'class': 'thread'})  # class_='thread')
+    message_board = soup.find_all('div', class_='thread')
 
     res = []
 
     # extract the contents of each thread
     for thread in message_board:
-        thread_data = thread.find_all('p', attrs={'class': 'intro'})
-        comment_name = thread_data.find('span', attr={'class': 'name'}).text.strip()
+        thread_data = thread.find_all('p', class_='intro')
+        comment_name = thread_data.find('span', class_='name').text.strip()
         comment_time = thread_data.find('time').text.strip()
-        comment_number = thread_data.find('a', attr={'class': 'post_no'}).text.strip()
-        thread_body = thread.find('div', attrs={'class': 'body'}).contents[0]
+        comment_number = thread_data.find('a', class_='post_no').text.strip()
+        thread_body = thread.find('div', class_='body').contents[0]
         row = [thread]
         if row:
             res.append(row)
