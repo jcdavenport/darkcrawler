@@ -58,10 +58,10 @@ def scraper():
 
         comment_block = [
             {
-                "Name": "comment_name",
-                "Time": "comment_time",
-                "Number": "comment_number",
-                "Text": "thread_body"
+                "Name": comment_name,
+                "Time": comment_time,
+                "Number": comment_number,
+                "Text": thread_body
             },
             ...
         ]
@@ -71,43 +71,3 @@ def scraper():
 
         for item_property_dict in comment_block:
             writer.writerow(item_property_dict)
-
-    # df = pd.DataFrame(res, columns=["Name", "Time", "Number", "Comment"])
-
-    # # export to csv file: method 1
-    # f.writerow(df)
-
-    # # export to csv file: method 2
-    # export_csv = df.to_csv(r'/home/jxdx/working/export_df.csv', index=None, header=True)
-
-    # # output the data frame to terminal
-    # print(df)
-
-    """
-      comment_name = comment_block.find('span', class_='name').text
-      comment_time = comment_block.find('time').text.strip()
-      comment_number = comment_block.find('a', class_='post_no').text.strip()
-      comment_body = comment_block.find_all('p', class_='body-line ltr ').text
-    
-    
-    
-    field_names = ["Name", "Time", "Number", "Text"]
-    with open("~/Desktop/testout.csv", "w") as f:
-        writer = csv.DictWriter(f, field_names)
-    
-        # comment_block = [
-        #   {
-        #       "Name": "comment_name",
-        #       "Time": "comment_time",
-        #       "Number": "comment_number",
-        #       "Text": "comment_body"
-        #   },
-        #   ...
-        # ]
-    
-        # Write a header row
-        writer.writerow({x: x for x in field_names})
-    
-        for item_property_dict in comment_block:
-            writer.writerow(item_property_dict)
-    """
