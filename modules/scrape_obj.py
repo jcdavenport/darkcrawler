@@ -41,27 +41,36 @@ def scraper():
 
     post_block = comment_board.find('div', class_='post reply body-not-empty')
 
-    # Lists to store the scraped data in
-    # res = []  # not needed
-    names = []
-    times = []
-    numbers = []
-    comments = []
+    # List to store the scraped data in
+    block = []
+    # names = []
+    # times = []
+    # numbers = []
+    # comments = []
 
     # extract the contents of each thread
     for post in post_block:
 
         comment_name = post.p.label.span.text
-        names.append(comment_name)
+        # names.append(comment_name)
 
         comment_time = post.p.label.time.text
-        times.append(comment_time)
+        # times.append(comment_time)
 
         comment_number = post.p.find('a', class_='post_no').text
-        numbers.append(comment_number)
+        # numbers.append(comment_number)
 
         comment_text = post.find('div', class_='body').p.text  # .contents[0]
-        comments.append(comment_text)
+        # comments.append(comment_text)
+
+        # used for writing data in csv.Dict format (not regular csv)
+        block.append({
+                "Thread": board_title,
+                "Name": comment_name,
+                "Time": comment_time,
+                "Number": comment_number,
+                "Text": comment_text
+            })
 
         # for lines in thread_body:
         #     comment_text = lines.p.text
@@ -72,22 +81,14 @@ def scraper():
         #     res.append(row)
 
     field_names = ["Thread", "Name", "Time", "Number", "Text"]
-    with open("~/Desktop/testout.csv", "w") as f:
+    with open('~/Desktop/testout.csv', 'w', encoding='utf-8') as f:
         writer = csv.DictWriter(f, field_names)
 
-        # used for writing data in csv.Dict format (not regular csv)
-        comment_block = [
-            {
-                "Thread": board_title,
-                "Name": comment_name,
-                "Time": comment_time,
-                "Number": comment_number,
-                "Text": comment_text
-            },
-        ]
+        writer.writeheader()
+        writer.writerows(block)
 
         # Write a header row (dict format)
-        writer.writerow({x: x for x in field_names})
-
-        for item_property_dict in comment_block:
-            writer.writerow(item_property_dict)
+        # writer.writerow({x: x for x in field_names})
+        #
+        # for item_property_dict in comment_block:
+        #     writer.writerow(item_property_dict)
