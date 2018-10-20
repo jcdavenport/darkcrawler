@@ -4,17 +4,13 @@
 This script scrapes data from 
 the comment section of a dark web forum:
 
-header->h1 gets the topic of the forum page
-
-
 Need to use Selenium to initially access this page,
 then Selenium will back out of this page and 
 click on the link to the next forum page
 
 """
-
 import csv
-import requests
+# import requests
 # import pandas as pd  # need to create a csv file without the use of pandas
 from bs4 import BeautifulSoup
 
@@ -22,26 +18,36 @@ from bs4 import BeautifulSoup
 # noinspection PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable
 def scraper():
     # parsing html from message board link location
-    page = requests.get('http://oxwugzccvk3dk6tj.onion/tech/index.html')  # hard-coded url for testing only
-    soup = BeautifulSoup(page.text, 'html.parser')
+    # page = requests.get('http://oxwugzccvk3dk6tj.onion/tech/index.html')  # hard-coded url for testing only
+    # soup = BeautifulSoup(page.text, 'html.parser')
+
+    filepath = '/home/jxdx/Development/darkcrawler/tech.html'
+    soup = BeautifulSoup(open(filepath), 'html.parser')
+
+    # try:
+    #     if filepath is not None:
+    #         html_page = urllib.request.urlopen(filepath)
+    # except urllib.error.HTTPError as e:
+    #     # print e
+    #     print('The server couldn\'t fulfill the request.')
+    #     print('Error code: ', e.code)
 
     # get the title of the message board
-    board_title = soup.find('header').find('h1')
-
-    # Create a file to write to, add headers row
-    f = csv.writer(open('test_data.csv', 'w'))
-    # f.writerow([board_title])
-    f.writerow(['Thread', 'Name', 'Time', 'Number', 'Comment'])
+    # board_title = soup.head.title.text
 
     # find the body of the message forum
     # forum_body = soup.find('body', class_='8chan is-not-moderator active-index').find('form', name_='postcontrols')
 
+    thread_topic = soup.find('input')['value']  # WORKS!
+    print(thread_topic)  # test stored value
+
     # containers for the post thread
-    comment_board = soup.find_all('div', class_='thread')
+    comment_board = soup.findAll('div', class_='thread')
 
-    post_block = comment_board.find('div', class_='post reply body-not-empty')
+    # post_block = comment_board.find('div', class_='post reply body-not-empty')
 
-    # List to store the scraped data in
+    # create list to store the scraped data
+    # res = []
     block = []
     # names = []
     # times = []
@@ -49,23 +55,27 @@ def scraper():
     # comments = []
 
     # extract the contents of each thread
-    for post in post_block:
+    for post in comment_board:
 
-        comment_name = post.p.label.span.text
+        comment_name = post.find('span', class_='name').text  # .label.span.text
+        print(comment_name)
         # names.append(comment_name)
 
-        comment_time = post.p.label.time.text
+        comment_time = post.find('time').text
+        print(comment_time)
         # times.append(comment_time)
 
-        comment_number = post.p.find('a', class_='post_no').text
+        comment_number = post.find('a', class_='post_no')['id']  # , class_='post_no')  # .text
+        print(comment_number)
         # numbers.append(comment_number)
 
-        comment_text = post.find('div', class_='body').p.text  # .contents[0]
+        comment_text = post.find('p', class_='body-line ltr ').text.strip("\n")
+        print(comment_text)
         # comments.append(comment_text)
 
-        # used for writing data in csv.Dict format (not regular csv)
+        # data used by csv.DictWriter
         block.append({
-                "Thread": board_title,
+                "Topic": thread_topic,
                 "Name": comment_name,
                 "Time": comment_time,
                 "Number": comment_number,
@@ -75,20 +85,16 @@ def scraper():
         # for lines in thread_body:
         #     comment_text = lines.p.text
 
-        # row = [thread]
+        # row = [block]
         #
         # if row:
         #     res.append(row)
 
-    field_names = ["Thread", "Name", "Time", "Number", "Text"]
-    with open('~/Desktop/testout.csv', 'w', encoding='utf-8') as f:
+    field_names = ["Topic", "Name", "Time", "Number", "Text"]
+    with open('testout.csv', 'a+', encoding='utf-8') as f:
         writer = csv.DictWriter(f, field_names)
 
         writer.writeheader()
-        writer.writerows(block)
 
-        # Write a header row (dict format)
-        # writer.writerow({x: x for x in field_names})
-        #
-        # for item_property_dict in comment_block:
-        #     writer.writerow(item_property_dict)
+        for dict_items in block:
+            writer.writerow(dict_items)
