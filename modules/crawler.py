@@ -107,18 +107,18 @@ def crawler(website, cdepth, cpause, outpath, logs, verbose):
 
             soup = BeautifulSoup(html_page, "html5lib")
 
-            table = soup.find('table', {'class': 'board-list-table'})
-            table_rows = table.find_all('tr')
-
-            res = []
-            for tr in table_rows:
-                td = tr.find_all('td')
-                row = [tr.text.strip() for tr in td if tr.text.strip()]
-                if row:
-                    res.append(row)
-
-            df = pd.DataFrame(res, columns=["uri", "title", "pph", "active", "tags", "posts_total"])
-            print(df)
+            # table = soup.find('table', {'class': 'board-list-table'})
+            # table_rows = table.find_all('tr')
+            #
+            # res = []
+            # for tr in table_rows:
+            #     td = tr.find_all('td')
+            #     row = [tr.text.strip() for tr in td if tr.text.strip()]
+            #     if row:
+            #         res.append(row)
+            #
+            # df = pd.DataFrame(res, columns=["uri", "title", "pph", "active", "tags", "posts_total"])
+            # print(df)
 
             # For each <a href=""> tag
             for link in soup.findAll('a'):

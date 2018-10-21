@@ -8,9 +8,11 @@ Need to use Selenium to initially access this page,
 then Selenium will back out of this page and 
 click on the link to the next forum page
 
+ONLY RETURNS 1 PAGE OF COMMENTS (15 lines)
+
 """
 import csv
-# import requests
+import requests
 # import pandas as pd  # need to create a csv file without the use of pandas
 from bs4 import BeautifulSoup
 
@@ -18,11 +20,12 @@ from bs4 import BeautifulSoup
 # noinspection PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable
 def scraper():
     # parsing html from message board link location
-    # page = requests.get('http://oxwugzccvk3dk6tj.onion/tech/index.html')  # hard-coded url for testing only
-    # soup = BeautifulSoup(page.text, 'html.parser')
+    page = requests.get('http://oxwugzccvk3dk6tj.onion/n/index.html')  # hard-coded url for testing only
+    soup = BeautifulSoup(page.text, 'html.parser')
 
-    filepath = '/home/jxdx/Development/darkcrawler/tech.html'
-    soup = BeautifulSoup(open(filepath), 'html.parser')
+    # for testing with local file
+    # filepath = '/home/jxdx/Development/darkcrawler/tech.html'
+    # soup = BeautifulSoup(open(filepath), 'html.parser')
 
     # try:
     #     if filepath is not None:
