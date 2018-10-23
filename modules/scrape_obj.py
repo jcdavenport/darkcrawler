@@ -17,15 +17,22 @@ import requests
 from bs4 import BeautifulSoup
 
 
+def concatenate_list_data(list_data):
+    result = ''
+    for element in list_data:
+        result += str(element)
+    return result
+
+
 # noinspection PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable,PyUnboundLocalVariable
 def scraper():
     # parsing html from message board link location
-    page = requests.get('http://oxwugzccvk3dk6tj.onion/n/index.html')  # hard-coded url for testing only
-    soup = BeautifulSoup(page.text, 'html.parser')
+    # page = requests.get('http://oxwugzccvk3dk6tj.onion/n/index.html')  # hard-coded url for testing only
+    # soup = BeautifulSoup(page.text, 'html.parser')
 
     # for testing with local file
-    # filepath = '/home/jxdx/Development/darkcrawler/tech.html'
-    # soup = BeautifulSoup(open(filepath), 'html.parser')
+    filepath = '/home/jxdx/Development/darkcrawler/tech.html'
+    soup = BeautifulSoup(open(filepath), 'html.parser')
 
     # try:
     #     if filepath is not None:
@@ -35,30 +42,22 @@ def scraper():
     #     print('The server couldn\'t fulfill the request.')
     #     print('Error code: ', e.code)
 
-    # get the title of the message board
-    # board_title = soup.head.title.text
+    # >>>>>>>Add some magic here to search for specific thread topics.<<<<<<<<<<
 
-    # find the body of the message forum
-    # forum_body = soup.find('body', class_='8chan is-not-moderator active-index').find('form', name_='postcontrols')
-
-    thread_topic = soup.find('input')['value']  # WORKS!
+    thread_topic = soup.find('input')['value']
     print(thread_topic)  # test stored value
 
     # containers for the post thread
-    comment_board = soup.findAll('div', class_='thread')
-
-    # post_block = comment_board.find('div', class_='post reply body-not-empty')
+    comment_thread = soup.findAll('div', class_='thread')
 
     # create list to store the scraped data
     # res = []
+    # concat = " "
+    concat_ltr = " "
     block = []
-    # names = []
-    # times = []
-    # numbers = []
-    # comments = []
 
     # extract the contents of each thread
-    for post in comment_board:
+    for post in comment_thread:
 
         comment_name = post.find('span', class_='name').text  # .label.span.text
         print(comment_name)
@@ -70,34 +69,35 @@ def scraper():
 
         comment_number = post.find('a', class_='post_no')['id']  # , class_='post_no')  # .text
         print(comment_number)
-        # numbers.append(comment_number)
 
-        comment_text = post.find('p', class_='body-line ltr ').text.strip("\n")
-        print(comment_text)
-        # comments.append(comment_text)
+        post_op = post.find('div', class_='post op has-file body-not-empty').find('div', class_='body').contents
 
-        # data used by csv.DictWriter
+        for post_ltr in post_op:
+            try:
+                concat = concatenate_list_data(post_ltr.text.strip())
+                concat_ltr = "".join(concat)
+                print(concat_ltr)
+            except:  # Ignore this error for now
+                pass
+
+            # row = [concat_ltr]
+            # if row:
+            #     res.append
+
+        # data used by csv.DictWriter (easily scalable)
         block.append({
-                "Topic": thread_topic,
-                "Name": comment_name,
-                "Time": comment_time,
-                "Number": comment_number,
-                "Text": comment_text
-            })
+            "Topic": thread_topic,
+            "Name": comment_name,
+            "Time": comment_time,
+            "Number": comment_number,
+            "Thread_Post": concat_ltr
+        })
 
-        # for lines in thread_body:
-        #     comment_text = lines.p.text
+    field_names = ["Topic", "Name", "Time", "Number", "Thread_Post"]
+    with open('tester.csv', 'w+', encoding='utf-8') as f:  # testout.csv, a+
+        writer1 = csv.DictWriter(f, field_names)
 
-        # row = [block]
-        #
-        # if row:
-        #     res.append(row)
-
-    field_names = ["Topic", "Name", "Time", "Number", "Text"]
-    with open('testout.csv', 'a+', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, field_names)
-
-        writer.writeheader()
+        writer1.writeheader()
 
         for dict_items in block:
-            writer.writerow(dict_items)
+            writer1.writerow(dict_items)
