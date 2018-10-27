@@ -8,8 +8,6 @@ Need to use Selenium to initially access this page,
 then Selenium will back out of this page and 
 click on the link to the next forum page
 
-ONLY RETURNS 1 PAGE OF COMMENTS (15 lines)
-
 """
 import csv
 # import re
@@ -32,7 +30,7 @@ def torum():
     # soup = BeautifulSoup(page.text, 'html.parser')
 
     # for testing with local file
-    filepath = '/home/jxdx/Development/darkcrawler/targets/hacktivists4.html'
+    filepath = '/home/jxdx/Development/darkcrawler/targets/torum_intel_exchange_multi_cve.html'
     soup = BeautifulSoup(open(filepath), 'html.parser')
 
     # try:
@@ -51,8 +49,12 @@ def torum():
     forum_topic = soup.find('h2', class_='topic-title').a.text
     print(forum_topic)  # test stored value
 
-    forum_page = soup.find('li', class_='active').span.text
-    print(forum_page)
+    try:
+        forum_page = soup.find('li', class_='active').span.text
+        print(forum_page)
+    except:
+        forum_page = "N/A"
+        print(forum_page)
 
     forum_body = soup.find('div', id='page-body')
 
@@ -105,7 +107,7 @@ def torum():
         })
 
     field_names = ["Forum", "Topic", "Page", "User_Data", "Comment"]
-    with open('torum_hacktivist.csv', 'a', newline='', encoding='utf-8') as f:  # testout.csv, a+
+    with open('torum_data.csv', 'a+', newline='', encoding='utf-8') as f:
         writer1 = csv.DictWriter(f, field_names)
 
         writer1.writeheader()
